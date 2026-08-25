@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>ITV Programme Promo Editor - Mobile</title>
+
+<style>
+
+/* =========================================================
+   FONT
+   ========================================================= */
+
+@font-face {
+    font-family: "ITVDisplaySans-Regular";
+    src: url("ITVDisplaySans-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #111;
+    font-family:
+        "ITVDisplaySans-Regular",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+#app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   EDITOR
+   ========================================================= */
+
+#editor {
+    width: 100%;
+    min-width: 0;
+    background: #202020;
+    color: white;
+    padding: 20px;
+}
+
+
+#editor h1 {
+    margin: 0 0 18px;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+
+.section {
+    margin-bottom: 20px;
+}
+
+
+.section-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    opacity: .7;
+}
+
+
+label {
+    display: block;
+    font-size: 16px;
+    margin: 14px 0 7px;
+}
+
+
+input[type="text"],
+input[type="file"],
+select {
+    width: 100%;
+    min-height: 50px;
+
+    border: 1px solid #555;
+    border-radius: 7px;
+
+    background: #2d2d2d;
+    color: white;
+
+    padding: 10px 12px;
+
+    font-family: inherit;
+    font-size: 17px;
+}
+
+
+select {
+    cursor: pointer;
+}
+
+
+input[type="file"] {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   RANGE SLIDERS
+   ========================================================= */
+
+input[type="range"] {
+    width: 100%;
+    height: 30px;
+
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   STATUS CHECKBOX
+   ========================================================= */
+
+.status-label-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 14px 0 7px;
+}
+
+
+.status-label-row label {
+    margin: 0;
+}
+
+
+.status-checkbox {
+    width: 26px !important;
+    height: 26px;
+
+    min-height: 26px !important;
+
+    margin: 0;
+
+    padding: 0 !important;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+button {
+    width: 100%;
+
+    border: 0;
+    border-radius: 7px;
+
+    padding: 13px;
+
+    margin-top: 9px;
+
+    background: #f9c927;
+    color: #111;
+
+    font-family: inherit;
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+
+button:hover {
+    filter: brightness(.95);
+}
+
+
+#saveImageButton {
+    background: #f9c927;
+    color: #111;
+    font-weight: 600;
+}
+
+
+#saveImageButton:active {
+    filter: brightness(.9);
+}
+
+
+/* =========================================================
+   VIEWER
+   ========================================================= */
+
+#viewer {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    background: #080808;
+
+    padding: 0;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   16:9 SCREEN
+   ========================================================= */
+
+#screen {
+
+    position: relative;
+
+    width: 100%;
+    max-width: 1920px;
+
+    aspect-ratio: 16 / 9;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    background: #061012;
+
+    container-type: inline-size;
+}
+
+
+/* =========================================================
+   PROGRAMME IMAGE
+   ========================================================= */
+
+#programmeImage {
+
+    position: absolute;
+
+    left: 24.9%;
+    top: 19.0%;
+
+    width: 49.7%;
+    height: 62.55%;
+
+    object-fit: fill;
+
+    display: block;
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   ITV CHANNEL BACKGROUND
+   ========================================================= */
+
+#backgroundOverlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: fill;
+
+    display: block;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PROGRAMME TITLE
+   ========================================================= */
+
+#title {
+
+    position: absolute;
+
+    left: 7.8%;
+    top: 41.1%;
+
+    width: 52%;
+
+    color: white;
+
+    font-family:
+        "ITVDisplaySans-Regular",
+        Arial,
+        sans-serif;
+
+    font-size: 8.5417cqw;
+
+    line-height: .88;
+
+    letter-spacing: -0.0781cqw;
+
+    white-space: pre-line;
+
+    overflow-wrap: normal;
+
+    z-index: 3;
+
+    transform: translateY(-50%);
+}
+
+
+/* =========================================================
+   RIGHT-HAND INFORMATION
+   ========================================================= */
+
+#rightInfo {
+
+    position: absolute;
+
+    left: 77.5%;
+    top: 46.1%;
+
+    color: white;
+
+    font-family:
+        "ITVDisplaySans-Regular",
+        Arial,
+        sans-serif;
+
+    z-index: 3;
+}
+
+
+/* =========================================================
+   STATUS / NEW
+   ========================================================= */
+
+#status {
+
+    color: rgb(107, 187, 188);
+
+    font-size: 2.65625cqw;
+
+    line-height: 1;
+
+    margin-bottom: 0.15625cqw;
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+#date {
+
+    position: relative;
+
+    top: -0.2604cqw;
+
+    font-size: 2.65625cqw;
+
+    line-height: 1.03;
+
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+#time {
+
+    position: relative;
+
+    top: -0.2604cqw;
+
+    font-size: 2.65625cqw;
+
+    line-height: 1.03;
+}
+
+
+/* =========================================================
+   STATUS CHECKBOX OFF
+   ========================================================= */
+
+#rightInfo.status-hidden-offset #status {
+    display: none;
+}
+
+
+#rightInfo.status-hidden-offset #date,
+#rightInfo.status-hidden-offset #time {
+
+    top: 0cqw;
+}
+
+
+/* =========================================================
+   BACKGROUND INFORMATION
+   ========================================================= */
+
+.background-info {
+
+    font-size: 13px;
+    line-height: 1.4;
+
+    opacity: .65;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    #editor {
+        padding: 16px;
+    }
+
+
+    #editor h1 {
+        font-size: 21px;
+    }
+
+
+    .section-title {
+        font-size: 15px;
+    }
+
+
+    label {
+        font-size: 15px;
+    }
+
+
+    input[type="text"],
+    input[type="file"],
+    select {
+
+        font-size: 16px;
+    }
+
+
+    #viewer {
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+
+        overflow: hidden;
+    }
+
+
+    #screen {
+
+        width: min(
+            100%,
+            calc((100dvh - 16px) * 16 / 9)
+        );
+
+        max-width: 100%;
+
+        height: auto;
+
+        aspect-ratio: 16 / 9;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div id="app">
+
+
+<!-- =====================================================
+     EDITOR
+     ===================================================== -->
+
+<aside id="editor">
+
+
+    <h1>
+        ITV Programme Promo
+    </h1>
+
+
+    <!-- =================================================
+         CHANNEL
+         ================================================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Channel
+        </div>
+
+
+        <label for="channelInput">
+            Channel
+        </label>
+
+
+        <select id="channelInput">
+
+            <option value="itv1">
+                ITV1
+            </option>
+
+            <option value="itv2">
+                ITV2
+            </option>
+
+            <option value="itv3">
+                ITV3
+            </option>
+
+            <option value="itv4">
+                ITV4
+            </option>
+
+            <option value="itvx">
+                ITVX
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- =================================================
+         PROGRAMME IMAGE
+         ================================================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Programme image
+        </div>
+
+
+        <label for="imageUpload">
+            Upload image
+        </label>
+
+
+        <input
+            id="imageUpload"
+            type="file"
+            accept="image/*"
+        >
+
+
+        <button id="resetImage">
+            Use example image
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         PROGRAMME TEXT
+         ================================================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Programme text
+        </div>
+
+
+        <!-- TITLE -->
+
+        <label for="titleInput">
+            Title
+        </label>
+
+
+        <input
+            id="titleInput"
+            type="text"
+            value="Who Wants To Be A Millionaire"
+        >
+
+
+        <!-- TITLE POSITION -->
+
+        <label for="titleXInput">
+            Title left / right
+        </label>
+
+
+        <input
+            id="titleXInput"
+            type="range"
+            min="-20"
+            max="20"
+            step="0.1"
+            value="0"
+        >
+
+
+        <label for="titleYInput">
+            Title up / down
+        </label>
+
+
+        <input
+            id="titleYInput"
+            type="range"
+            min="-20"
+            max="20"
+            step="0.1"
+            value="0"
+        >
+
+
+        <!-- STATUS -->
+
+        <div class="status-label-row">
+
+            <label for="statusInput">
+                Status
+            </label>
+
+
+            <input
+                id="statusPositionCheckbox"
+                class="status-checkbox"
+                type="checkbox"
+                checked
+                title="Status spacing"
+            >
+
+        </div>
+
+
+        <input
+            id="statusInput"
+            type="text"
+            value="NEW"
+        >
+
+
+        <!-- DATE -->
+
+        <label for="dateInput">
+            Date
+        </label>
+
+
+        <input
+            id="dateInput"
+            type="text"
+            value="TUES 4 SEP"
+        >
+
+
+        <!-- TIME -->
+
+        <label for="timeInput">
+            Time
+        </label>
+
+
+        <input
+            id="timeInput"
+            type="text"
+            value="8.30PM"
+        >
+
+    </div>
+
+
+    <!-- =================================================
+         BACKGROUND
+         ================================================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Background
+        </div>
+
+
+        <p class="background-info">
+
+            Backgrounds are automatically selected
+            according to the channel.
+
+            Place background.png through
+            background5.png in the same folder.
+
+        </p>
+
+    </div>
+
+
+    <!-- =================================================
+         SAVE
+         ================================================= -->
+
+    <div class="section">
+
+        <button
+            id="saveImageButton"
+            type="button"
+        >
+            Save Image
+        </button>
+
+    </div>
+
+
+</aside>
+
+
+<!-- =====================================================
+     VIEWER
+     ===================================================== -->
+
+<main id="viewer">
+
+
+    <div id="screen">
+
+
+        <!-- PROGRAMME IMAGE -->
+
+        <img
+            id="programmeImage"
+            src="default-programme-image.png"
+            alt="Programme image"
+        >
+
+
+        <!-- ITV CHANNEL BACKGROUND -->
+
+        <img
+            id="backgroundOverlay"
+            src="background.png"
+            alt=""
+        >
+
+
+        <!-- PROGRAMME TITLE -->
+
+        <div id="title">
+            Who Wants To Be A Millionaire
+        </div>
+
+
+        <!-- RIGHT INFORMATION -->
+
+        <div id="rightInfo">
+
+
+            <div id="status">
+                NEW
+            </div>
+
+
+            <div id="date">
+                TUES 4 SEP
+            </div>
+
+
+            <div id="time">
+                8.30PM
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const imageUpload =
+    document.getElementById("imageUpload");
+
+const programmeImage =
+    document.getElementById("programmeImage");
+
+const resetImage =
+    document.getElementById("resetImage");
+
+const channelInput =
+    document.getElementById("channelInput");
+
+const backgroundOverlay =
+    document.getElementById("backgroundOverlay");
+
+const titleInput =
+    document.getElementById("titleInput");
+
+const titleXInput =
+    document.getElementById("titleXInput");
+
+const titleYInput =
+    document.getElementById("titleYInput");
+
+const statusInput =
+    document.getElementById("statusInput");
+
+const dateInput =
+    document.getElementById("dateInput");
+
+const timeInput =
+    document.getElementById("timeInput");
+
+const statusPositionCheckbox =
+    document.getElementById(
+        "statusPositionCheckbox"
+    );
+
+const title =
+    document.getElementById("title");
+
+const status =
+    document.getElementById("status");
+
+const date =
+    document.getElementById("date");
+
+const time =
+    document.getElementById("time");
+
+const rightInfo =
+    document.getElementById("rightInfo");
+
+
+/* =========================================================
+   CHANNEL SETTINGS
+   ========================================================= */
+
+const channelSettings = {
+
+
+    /* ITV1 */
+
+    itv1: {
+
+        background:
+            "background.png",
+
+        colour:
+            "rgb(107, 187, 188)",
+
+        title:
+            "Who Wants To Be A Millionaire",
+
+        status:
+            "NEW",
+
+        date:
+            "TUES 4 SEP",
+
+        time:
+            "8.30PM"
+
+    },
+
+
+    /* ITV2 */
+
+    itv2: {
+
+        background:
+            "background2.png",
+
+        colour:
+            "rgb(104, 45, 113)",
+
+        title:
+            "Dawson's Creek",
+
+        status:
+            "NEW",
+
+        date:
+            "TUES 4 SEP",
+
+        time:
+            "4PM"
+
+    },
+
+
+    /* ITV3 */
+
+    itv3: {
+
+        background:
+            "background3.png",
+
+        colour:
+            "rgb(126, 104, 159)",
+
+        title:
+            "Midsomer Murders",
+
+        status:
+            "NEW",
+
+        date:
+            "SAT 6 SEP",
+
+        time:
+            "7PM"
+
+    },
+
+
+    /* ITV4 */
+
+    itv4: {
+
+        background:
+            "background4.png",
+
+        colour:
+            "rgb(64, 112, 77)",
+
+        title:
+            "The Car\nYears",
+
+        status:
+            "NEW",
+
+        date:
+            "SUN 7 SEP",
+
+        time:
+            "12PM"
+
+    },
+
+
+    /* ITVX */
+
+    itvx: {
+
+        background:
+            "background5.png",
+
+        colour:
+            "rgb(224, 237, 125)",
+
+        title:
+            "Prue Leith's Cotswold Kitchen",
+
+        status:
+            "NEW SERIES",
+
+        date:
+            "COMING SOON",
+
+        time:
+            ""
+
+    }
+
+};
+
+
+/* =========================================================
+   CHANGE CHANNEL
+   ========================================================= */
+
+function updateChannel() {
+
+    const selectedChannel =
+        channelInput.value;
+
+    const settings =
+        channelSettings[selectedChannel];
+
+
+    /* Background */
+
+    backgroundOverlay.src =
+        settings.background;
+
+
+    /* Status colour */
+
+    status.style.color =
+        settings.colour;
+
+
+    /* Editor */
+
+    titleInput.value =
+        settings.title;
+
+    statusInput.value =
+        settings.status;
+
+    dateInput.value =
+        settings.date;
+
+    timeInput.value =
+        settings.time;
+
+
+    /* Screen */
+
+    title.textContent =
+        settings.title;
+
+    status.textContent =
+        settings.status;
+
+    date.textContent =
+        settings.date;
+
+    time.textContent =
+        settings.time;
+
+
+    /*
+       Reset title position when
+       changing channel.
+    */
+
+    titleXInput.value = 0;
+    titleYInput.value = 0;
+
+    updateTitlePosition();
+}
+
+
+/* =========================================================
+   TITLE POSITION
+   ========================================================= */
+
+function updateTitlePosition() {
+
+    const x =
+        parseFloat(titleXInput.value);
+
+    const y =
+        parseFloat(titleYInput.value);
+
+
+    title.style.left =
+        `calc(7.8% + ${x}cqw)`;
+
+
+    title.style.top =
+        `calc(41.1% + ${y}cqw)`;
+
+}
+
+
+titleXInput.addEventListener(
+    "input",
+    updateTitlePosition
+);
+
+
+titleYInput.addEventListener(
+    "input",
+    updateTitlePosition
+);
+
+
+/* =========================================================
+   STATUS CHECKBOX
+   ========================================================= */
+
+function updateStatusSpacing() {
+
+    if (
+        statusPositionCheckbox.checked
+    ) {
+
+        rightInfo.classList.remove(
+            "status-hidden-offset"
+        );
+
+    } else {
+
+        rightInfo.classList.add(
+            "status-hidden-offset"
+        );
+
+    }
+
+}
+
+
+statusPositionCheckbox.addEventListener(
+    "change",
+    updateStatusSpacing
+);
+
+
+/* =========================================================
+   CHANNEL SELECTOR
+   ========================================================= */
+
+channelInput.addEventListener(
+    "change",
+    updateChannel
+);
+
+
+/* =========================================================
+   IMAGE UPLOAD
+   ========================================================= */
+
+imageUpload.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+
+        if (
+            !file.type.startsWith("image/")
+        ) {
+
+            alert(
+                "Please choose an image file."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        const imageURL =
+            URL.createObjectURL(file);
+
+
+        programmeImage.src =
+            imageURL;
+
+    }
+);
+
+
+/* =========================================================
+   RESET IMAGE
+   ========================================================= */
+
+resetImage.addEventListener(
+    "click",
+    function () {
+
+        programmeImage.src =
+            "default-programme-image.png";
+
+        imageUpload.value = "";
+
+    }
+);
+
+
+/* =========================================================
+   UPDATE TEXT
+   ========================================================= */
+
+function updateText(
+    input,
+    element
+) {
+
+    element.textContent =
+        input.value;
+
+}
+
+
+titleInput.addEventListener(
+    "input",
+    () =>
+        updateText(
+            titleInput,
+            title
+        )
+);
+
+
+statusInput.addEventListener(
+    "input",
+    () =>
+        updateText(
+            statusInput,
+            status
+        )
+);
+
+
+dateInput.addEventListener(
+    "input",
+    () =>
+        updateText(
+            dateInput,
+            date
+        )
+);
+
+
+timeInput.addEventListener(
+    "input",
+    () =>
+        updateText(
+            timeInput,
+            time
+        )
+);
+
+
+/* =========================================================
+   SAVE IMAGE
+   ========================================================= */
+
+const saveImageButton =
+    document.getElementById(
+        "saveImageButton"
+    );
+
+
+saveImageButton.addEventListener(
+    "click",
+    function () {
+
+        const link =
+            document.createElement("a");
+
+
+        link.download =
+            "ITV-Programme-Promo.png";
+
+
+        /*
+           Note:
+           The original code references
+           "canvas", but this editor uses
+           the #screen element rather than
+           a canvas element.
+        */
+
+        alert(
+            "Save Image requires the screen to be rendered to a canvas first."
+        );
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL SETTINGS
+   ========================================================= */
+
+updateChannel();
+
+updateStatusSpacing();
+
+updateTitlePosition();
+
+
+</script>
+
+
+</body>
+</html>
